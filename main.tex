@@ -9,6 +9,7 @@
 \usepackage{multirow}
 \usepackage{ctable} %para mejorar el formato de las tablas
 
+
 %titulo: [titulo corto (va en el heading)] {titulo largo (tiulo del articulo)}
 \titlerevista[Preparación de Artículos para la Revista Politécnica]{Preparación de Artículos para la Revista Politécnica Utilizar Mayúsculas en cada Palabra en el Caso del Título}%el corchete se puede omitir, pero si el título es muy grande, se puede usar este para poner un título más corto en los encabezados
 \newcommand{\tituloingles}{ Title of Manuscript} %titulo del articulo en inglés
@@ -189,7 +190,14 @@ $\setminus$bibitem [autor-principal  (año) autor2 and autor3 ]$\lbrace$ numero-
 
 El artículo debe contener un mínimo de 6 referencias. En el archivo .txt se puede revisar algunos ejemplos de citas. 
 
-\printbibliography[title={Referencias}]
+\begin{center}
+\bf REFERENCIAS
+\end{center}
+\printbibliography[title={Referencias}, heading=none]
 
+
+{\bf Apéndice A.}  PRIMER APÉNDICE \\
+
+{\bf Apéndice B.} SEGUNDO APÉNDICE \\
 
 \end{document}
