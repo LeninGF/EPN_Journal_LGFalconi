@@ -1,0 +1,323 @@
+% ----------------------- Identification -------------------
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{revista_poli-01}[2010/11/10]
+
+\RequirePackage[utf8]{inputenc}
+\RequirePackage[T1]{fontenc}
+\RequirePackage[english,spanish,es-nodecimaldot,es-nolayout]{babel}
+
+\RequirePackage{ifthen}
+
+%\RequirePackage[squaren]{SIunits}
+\RequirePackage{amsmath,amssymb,bm}
+%\RequirePackage[collision]{chemsym}
+
+\RequirePackage{mathpazo}
+
+
+\RequirePackage{enumitem}
+\RequirePackage{array}
+\RequirePackage{multirow}
+\RequirePackage{multicol}
+\RequirePackage[spanish]{varioref}
+% ======= natbib para bibliografia ============================
+% \RequirePackage{natbib} %bibliografia tipo apa [author corto (año) (todos los autores separados por and)]
+% =============================================================
+% ======= biblatex para bibliografia===========================
+\RequirePackage[backend=biber,style=apa, maxcitenames=3]{biblatex}
+\DefineBibliographyStrings{spanish}{andothers={et~al\adddot}} % pone et al en vez y col que es la traducción por defecto
+\addbibresource{referencias.bib}
+% =============================================================
+
+\RequirePackage{times} %letra times new roman
+\RequirePackage{mathptmx} % ecuaciones parecidas al word
+
+
+\RequirePackage{graphicx}
+\RequirePackage[font={footnotesize},tablename=Tabla,labelfont={bf,footnotesize},labelsep=period,justification=centering]{caption}
+\RequirePackage{float}
+
+%\RequirePackage[table,dvipsnames]{xcolor}
+\RequirePackage{colortbl}
+
+%\RequirePackage[paperwidth=15.5cm,paperheight=23.5cm,twoside,top=2cm,bottom=2cm,left=2cm,right=2cm]{geometry}
+\RequirePackage[paperwidth=21cm,paperheight=29.7cm,textwidth=18.1cm,textheight=24.7cm,twoside,top=2.0cm,bottom=3.2cm,footskip=2.5cm,left=1.1cm,right=1.1cm]{geometry}
+%footskip: para saltar del texto al pie de pagina
+\RequirePackage[colorlinks,linkcolor=black,urlcolor=black,citecolor=black,breaklinks=true]{hyperref}
+\RequirePackage{fancyhdr}
+
+%quitar el titulo referencias
+\RequirePackage{etoolbox}
+\patchcmd{\thebibliography}{\section*{\refname}}{}{}{}
+
+
+%================================Paquetes Agregados REDU============================================
+\RequirePackage{twoopt}
+\RequirePackage{abstract}
+\RequirePackage{calc}
+\RequirePackage{forloop}
+\RequirePackage[explicit]{titlesec}
+\RequirePackage{lipsum}
+%================================Paquetes Agregados REDU============================================
+
+%Para cambiar el formato de los titulos de las secciones y subsecciones
+
+%\titleformat{\section}
+%  {\normalfont}{\thesection.}{1em}{\centering \bfseries{#1}}
+
+\titleformat{\section}
+  {\normalsize}{}{0pt}{\centering\textbf{\thesection{}. \textsc{#1}}}
+  
+\titleformat{\subsection}
+  {\normalfont\itshape}{\thesubsection}{1ex}{\textit{#1}}
+  
+  
+%para eliminar la sangría automática de los párrafos
+\setlength\parindent{0pt}
+
+
+%\renewcommand{\abstractname}{}    % clear the title
+
+%Contadores
+\newcounter{tablarevista}
+\setcounter{tablarevista}{0}
+\newcounter{figurarevista}
+\setcounter{figurarevista}{0}
+\newcounter{autores}
+\setcounter{autores}{0}
+\newcounter{autoresx}
+\setcounter{autoresx}{0}
+\newcounter{institutos}
+\setcounter{institutos}{0}
+\newcounter{institutosx}
+\setcounter{institutosx}{0}
+
+%Titulo
+\pagestyle{fancy}
+
+\newcommand{\titlerevista}[2][]%
+  {\newcommand\@titlerevista{#2}
+   \ifthenelse{\not\equal{#1}{}}
+              {\newcommand\@shorttitlerevista{#1%\ \ldots
+              }}
+              {\newcommand\@shorttitlerevista{\@titlerevista}}
+  }
+
+
+
+\newenvironment{resumen}
+    {\hrule\begingroup\vspace*{\baselineskip}}
+    {\endgroup\vspace*{\baselineskip}}
+
+\renewenvironment{abstract}
+    {\begingroup\vspace*{\baselineskip}}
+    {\endgroup\vspace*{\baselineskip}\hrule\vspace*{\baselineskip}}
+
+%\newcommand{\authorrevista}[2][]%
+%  {\newcommand\@authorrevista{#2}
+%   \ifthenelse{\not\equal{#1}{}}
+%              {\newcommand\@shortauthorrevista{#1}}
+%              {\newcommand\@shortauthorrevista{\@authorrevista}}
+%  }
+
+
+\newcommandtwoopt{\@NAutor}[4][1][]{%El comando \NAutor genera comandos con nombres \@authorrevista#1 donde #1 se reemplaza por la opción ingresada
+\expandafter\newcommand\csname @authorrevista#1\endcsname{#3#4}%
+\ifthenelse{\not\equal{#2}{}}%
+ 	             {\expandafter\newcommand\csname @shortauthorrevista#1\endcsname{#2}}%
+	             {\expandafter\newcommand\csname @shortauthorrevista#1\endcsname{#3}}
+}
+
+\newcommandtwoopt{\authorrevista}[3][1][]%
+{
+   \refstepcounter{autores}
+   \ifthenelse{\equal{#1}{1}}
+              {\@NAutor[\arabic{autores}][#2]{#3}{$^1$}}{}
+   \ifthenelse{\equal{#1}{2}}
+              {\@NAutor[\arabic{autores}][#2]{#3}{$^{2}$}}{}
+   \ifthenelse{\equal{#1}{3}}
+              {\@NAutor[\arabic{autores}][#2]{#3}{$^{3}$}}{}
+   \ifthenelse{\equal{#1}{4}}
+              {\@NAutor[\arabic{autores}][#2]{#3}{$^{4}$}}{}
+   \ifthenelse{\equal{#1}{5}}
+              {\@NAutor[\arabic{autores}][#2]{#3}{$^{5}$}}{}
+   \ifthenelse{\equal{#1}{6}}
+              {\@NAutor[\arabic{autores}][#2]{#3}{$^{6}$}}{}
+   \ifthenelse{\equal{#1}{7}}
+              {\@NAutor[\arabic{autores}][#2]{#3}{$^{7}$}}{}
+   \ifthenelse{\equal{#1}{8}}
+              {\@NAutor[\arabic{autores}][#2]{#3}{$^{8}$}}{}
+}
+
+
+
+%\newcommand{\institucion}[2][]%
+%  {\newcommand\\textbf{@institucionprincipal}{#2}
+%   \newcommand\@institucionsecundaria{#1}
+%  }
+
+
+\newcommandtwoopt{\@NInstituto}[4][1][]{%
+\expandafter\newcommand\csname @institucionprincipal#1\endcsname{#3}%
+\expandafter\newcommand\csname @institucionsecundaria#1\endcsname{#2}%
+\expandafter\newcommand\csname @email#1\endcsname{#4}%
+}
+
+
+
+
+\newcommandtwoopt{\institucionmail}[4][1][]%
+{
+   \refstepcounter{institutos}
+%   \newcommand\@institucionsecundaria{#2}
+   \ifthenelse{\equal{#1}{1}}
+              {\@NInstituto[\arabic{institutos}][#2]{$^1$#3}{#4}}{}
+   \ifthenelse{\equal{#1}{2}}
+              {\@NInstituto[\arabic{institutos}][#2]{$^2$#3}{#4}}{}
+   \ifthenelse{\equal{#1}{3}}
+              {\@NInstituto[\arabic{institutos}][#2]{$^{3}$#3}{#4}}{}
+   \ifthenelse{\equal{#1}{4}}
+              {\@NInstituto[\arabic{institutos}][#2]{$^{4}$#3}{#4}}{}
+   \ifthenelse{\equal{#1}{5}}
+              {\@NInstituto[\arabic{institutos}][#2]{$^{5}$#3}{#4}}{}
+   \ifthenelse{\equal{#1}{6}}
+              {\@NInstituto[\arabic{institutos}][#2]{$^{8}$#3}{#4}}{}
+   \ifthenelse{\equal{#1}{7}}
+              {\@NInstituto[\arabic{institutos}][#2]{$^9$#3}{#4}}{}
+   \ifthenelse{\equal{#1}{8}}
+              {\@NInstituto[\arabic{institutos}][#2]{$^{10}$#3}{#4}}{}
+  }
+
+\newcommand{\email}[1]%
+  {\newcommand\@email{#1}}
+
+\newcommand{\fecharecepcion}[1]%
+  {\newcommand\@fecharecepcion{#1}}
+
+\newcommand{\fechaaceptacion}[1]%
+  {\newcommand\@fechaaceptacion{#1}}
+
+\newcommand{\nombrerevista}[1]%
+  {\newcommand\@nombrerevista{#1}}
+
+\newcommand{\volumenrevista}[1]%
+  {\newcommand\@volumenrevista{#1}}
+  
+\newcommand{\mesrevista}[1]%
+{\newcommand\@mesrevista{#1}}
+
+\newcommand{\aniorevista}[1]%
+  {\newcommand\@aniorevista{#1}}
+
+\newcommand{\numerorevista}[1]%
+  {\newcommand\@numerorevista{#1}}
+
+
+
+%head[]{}:[pagina par]{pagina impar}
+\newcommand{\sethdrevista}%
+{
+  \lhead[ ]{ }
+  \rhead[ ]{ } 
+  \chead[ {\small \forloop[1]{autoresx}{1}{\value{autoresx} < \value{autores}}{{} \footnotesize \expandafter\csname @shortauthorrevista\arabic{autoresx}\endcsname{};}{} \expandafter\csname @shortauthorrevista\arabic{autoresx}\endcsname \\[-0.2cm] }] { \small\textit{\@shorttitlerevista}\\[-0.2cm] }
+ \renewcommand{\headrulewidth}{0.5pt}
+  
+\cfoot[{\footnotesize Revista Polit\'ecnica-XXXX 202X, Vol. XX, No. X \\[2.0cm]}]{{\footnotesize Revista Polit\'ecnica-XXXX 202X, Vol. XX, No. X \\[2.0cm]}}
+  \lfoot[ ]{ }
+  \rfoot[ ]{ }
+  }
+
+%\forloop[step]{counter}{initial_value}{conditional}{code_block}
+
+\newcommand\maketitlerevista{%
+  \title{\LARGE \textbf{\@titlerevista}\\[-0.2cm]}
+  \author{
+          \forloop[1]{autoresx}{1}{\value{autoresx} < \value{autores}}{\textbf{ \small \expandafter\csname @authorrevista\arabic{autoresx}\endcsname ;}}%
+          \textbf{ \small \expandafter\csname @authorrevista\arabic{autoresx}\endcsname}\\[0.3cm]
+          \forloop[1]{institutosx}{1}{\value{institutosx} < \value{institutos}}{\small%
+                {} \textit{\expandafter\csname @institucionprincipal\arabic{institutosx}\endcsname}%
+                \ifthenelse{\equal{\expandafter\csname @institucionsecundaria\arabic{institutosx}\endcsname}{}}
+                           {\\[-0.1cm]}
+                           {\textit{ \expandafter\csname @institucionsecundaria\arabic{institutosx}\endcsname{}}\\[-0.1cm]}%
+                \ifthenelse{\equal{\expandafter\csname @email\arabic{institutosx}\endcsname}{}}
+                           {}
+                           {\small e-mail: \expandafter\url{\expandafter\csname @email\arabic{institutosx}\endcsname}\\[-2pt]}
+          }
+          {} \small \textit{\expandafter\csname @institucionprincipal\arabic{institutos}\endcsname}%
+                  \ifthenelse{\equal{\expandafter\csname @institucionsecundaria\arabic{institutos}\endcsname}{}}
+                             {\\[-1cm]}
+                             {\textit{, \expandafter\csname @institucionsecundaria\arabic{institutos}\endcsname{}}\\[0.2cm]}
+                  \ifthenelse{\equal{\expandafter\csname @email\arabic{institutos}\endcsname}{}}
+                             {}
+                             {\small e-mail: \expandafter\url{\expandafter\csname @email\arabic{institutos}\endcsname}\\[-0.2cm]}
+   }
+   \date{}
+%  \date{\small\textbf{Recibido:} \@fecharecepcion \hspace{4em} \textbf{Aceptado:} \@fechaaceptacion}
+\begin{center}
+\begin{minipage}{0.9\linewidth}
+  \maketitle
+  \end{minipage}
+\end{center}
+}
+
+\newcommand{\keywordsrevista}[1]{\vspace{\baselineskip}\parindent 0pt \textbf{Keywords}: #1}
+\newcommand{\palabrasclavesrevista}[1]{\vspace{\baselineskip}\parindent 0pt\textbf{Palabras claves}: #1}
+
+\newcommand\captiontablarevista[1]{%
+  \refstepcounter{tablarevista}
+ % \\
+  \parindent 0pt
+  \vspace{0.5\baselineskip}
+  \sbox\@tempboxa{{\small\textbf{Tabla \thetablarevista}. #1}}
+  \ifdim \wd\@tempboxa >\hsize
+    {\small\textbf{Tabla \thetablarevista}. #1}\par
+  \else
+    \global\@minipagefalse
+    \hb@xt@\hsize{\hfil\box\@tempboxa\hfil}%
+  \fi
+  }
+
+\newcommand\captionfigurarevista[1]{%
+  \refstepcounter{figurarevista}
+%  \\
+  \parindent 0pt
+  \vspace{0.5\baselineskip}
+  \sbox\@tempboxa{{\small\textbf{Figura \thefigurarevista}. #1}}
+  \ifdim \wd\@tempboxa >\hsize
+    {\small\textbf{Figura \thefigurarevista}. #1}\par
+  \else
+    \global\@minipagefalse
+    \hb@xt@\hsize{\hfil\box\@tempboxa\hfil}%
+  \fi
+  }
+
+%Comandos para símbolos químicos y de unidades
+\newcommand{\Ox}{\protect\kemtkn{O}}
+\newcommand{\ppm}{\protect\kemtkn{ppm}}
+\newcommand{\psig}{\protect\kemtkn{psig}}
+\newcommand{\rpm}{\protect\kemtkn{rpm}}
+\newcommand{\pH}{\protect\kemtkn{pH}}
+\newcommand{\UE}{\protect\kemtkn{UE}}
+\newcommand{\msnm}{\protect\kemtkn{msnm}}
+\newcommand{\calo}{\protect\kemtkn{cal}}
+\newcommand{\Da}{\protect\kemtkn{Da}}
+\newcommand{\MM}{\protect\kemtkn{MM}}
+
+%Comandos para operadores matemáticos
+\DeclareMathOperator*\Var{Var}
+\DeclareMathOperator*\Cov{Cov}
+\DeclareMathOperator*\E{E}
+
+%Permita partir los "display"
+\allowdisplaybreaks
+
+
+%\makeatletter%jamás se dece poner los comandos \makeatletter o \makeatother en un archivo de paquete (.sty) o de clase (.cls)
+\newenvironment{tablehere}
+  {\def\@captype{table}}
+  {}
+
+\newenvironment{figurehere}
+  {\def\@captype{figure}}
+  {}
+%\makeatother %jamás se dece poner los comandos \makeatletter o \makeatother en un archivo de paquete (.sty) o de clase (.cls)
